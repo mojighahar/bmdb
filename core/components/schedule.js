@@ -18,8 +18,10 @@ class Schedule {
   }
 
   start() {
-    if(this.enabled)
+    if(this.enabled) {
       this.interval = setInterval(() => this.run(), this.duration)
+      this.run()
+    }
   }
 
   stop() {
