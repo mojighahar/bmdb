@@ -38,14 +38,14 @@ app.use(function(err, req, res, next) {
 });
 
 require('./core/scheduleManager').start()
-if(!fs.existsSync('./backup')) {
-  fs.mkdirSync('./backup')
+if(!fs.existsSync('./backups')) {
+  fs.mkdirSync('./backups')
 }
-if(!fs.existsSync('./backup/local')) {
-  fs.mkdirSync('./backup/local')
+if(!fs.existsSync('./backups/local')) {
+  fs.mkdirSync('./backups/local')
 }
-if(!fs.existsSync('./backup/remote')) {
-  fs.mkdirSync('./backup/remote')
+if(!fs.existsSync('./backups/remote')) {
+  fs.mkdirSync('./backups/remote')
 }
 if(!fs.existsSync('./storage')) {
   fs.mkdirSync('./storage')
