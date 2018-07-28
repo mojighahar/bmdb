@@ -1,0 +1,6 @@
+storage/*
+backups/*
+schedules/*
+node_modules
+npm-debug.log
+.env
