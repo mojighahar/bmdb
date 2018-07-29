@@ -11,6 +11,11 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/backup/getUpdates', function (req, res, next) {
+  if (req.query.token != process.env.token)
+    res.json({
+      success: false,
+      message: 'invalid_token'
+    })
   var updates = backupManager.getUpdates(req.query.startId)
   res.json({
     success: true,
@@ -19,6 +24,11 @@ router.get('/backup/getUpdates', function (req, res, next) {
 })
 
 router.get('/backup/download/:id', function (req, res, next) {
+  if (req.query.token != process.env.token)
+    res.json({
+      success: false,
+      message: 'invalid_token'
+    })
   var path = backupManager.find(req.params.id).path
   var stream = fs.createReadStream(path)
 
