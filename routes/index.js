@@ -11,8 +11,6 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/backup/getUpdates', function (req, res, next) {
-  console.log(req.query.token)
-  console.log(process.env.TOKEN)
   if (req.query.token != process.env.TOKEN)
     res.json({
       success: false,
@@ -26,24 +24,30 @@ router.get('/backup/getUpdates', function (req, res, next) {
 })
 
 router.get('/backup/download/:id', function (req, res, next) {
-  console.log(req.query.token)
   if (req.query.token != process.env.TOKEN)
     res.json({
       success: false,
       message: 'invalid_token'
     })
   var path = backupManager.find(req.params.id).path
+  console.log('Reading path:' + path)
   var stream = fs.createReadStream(path)
 
   var interval = null
+  var readed = stream.read(process.env.STREAM_SPEED)
+  console.log(readed)
+  res.write(readed)
+
   interval = setInterval(() => {
-    var readed = stream.read(process.env.STREAM_SPEED)
+    readed = stream.read(process.env.STREAM_SPEED)
     if (readed == null) {
       clearInterval(interval)
       stream.close()
+      console.log('THE END')
       res.end()
       return
     }
+    console.log(readed)
     res.write(readed)
   }, 1000)
 })
