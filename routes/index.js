@@ -11,7 +11,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/backup/getUpdates', function (req, res, next) {
-  if (req.query.token != process.env.token)
+  if (req.query.token != process.env.TOKEN)
     res.json({
       success: false,
       message: 'invalid_token'
@@ -24,7 +24,7 @@ router.get('/backup/getUpdates', function (req, res, next) {
 })
 
 router.get('/backup/download/:id', function (req, res, next) {
-  if (req.query.token != process.env.token)
+  if (req.query.token != process.env.TOKEN)
     res.json({
       success: false,
       message: 'invalid_token'
