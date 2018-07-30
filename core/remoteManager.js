@@ -8,8 +8,12 @@ var remoteBackups = []
 
 class RemoteManager {
   static async pull(id) {
+    console.log('Pulling remote id: ' + id)
     var remote = this.find(id)
+    console.log('Remote Finded: ' + remote.toObject());
+    
     var updates = await remote.getUpdates(this.getLastRemoteId(id))
+    console.log(update.length + ' Updates detected')
     for (var i = 0, update; update = updates[i]; i++) {
       var backup = RemoteBackup.new(
           this.getLastId(),
@@ -22,7 +26,9 @@ class RemoteManager {
             update.valid
           )
         )
+      console.log('Downloading backup id: ' + update.id)
       await remote.download(backup.remote.id, backup.path)
+      console.log('Downloaded backup id: ' + update.id)
       remoteBackups.push(backup)
       this.saveBackups()
     }
