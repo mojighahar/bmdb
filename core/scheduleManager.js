@@ -28,6 +28,10 @@ class ScheduleManager {
     })
   }
 
+  static All() {
+    return schedules
+  }
+
   static save() {
     var scheduleList = []
     schedules.forEach(schedule => {

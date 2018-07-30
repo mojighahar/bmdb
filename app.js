@@ -37,7 +37,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-require('./core/scheduleManager').start()
 if(!fs.existsSync('./backups')) {
   fs.mkdirSync('./backups')
 }
@@ -50,5 +49,13 @@ if(!fs.existsSync('./backups/remote')) {
 if(!fs.existsSync('./storage')) {
   fs.mkdirSync('./storage')
 }
+
+var scheduleManager = require('./core/scheduleManager')
+var schedules = scheduleManager.All()
+console.log('Total schedules: ' + schedules)
+schedules.forEach(schedule => {
+  console.log(schedule.toObject())
+})
+scheduleManager.start()
 
 module.exports = app;
