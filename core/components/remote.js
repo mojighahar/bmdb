@@ -14,22 +14,30 @@ class Remote {
 
   getUpdates(lastId) {
     return new Promise((resolve, reject) => {
-      http.get(`http://${this.host}:${this.port}/backup/getUpdates?startId=${lastId}&token=${this.token}`, (result) => {
+      var request = http.get(`http://${this.host}:${this.port}/backup/getUpdates?startId=${lastId}&token=${this.token}`, (result) => {
         if (result.statusCode != 200)
           reject()
 
         var rawData = ''
 
         result.on('data', (data) => {
-          rawData += data
+          rawData += data.toString()
         })
 
         result.on('end', () => {
-          resolve(JSON.parse(rawData).updates)
+          var parsed = JSON.parse(rawData)
+          console.log(parsed)
+          if(parsed.success) {
+            resolve(parsed.updates)
+          } else {
+            reject()
+          }
+          
         })
 
         result.on('error', reject)
       })
+      request.on('error', reject)
     })
   }
 
@@ -39,7 +47,6 @@ class Remote {
         if (result.statusCode != 200)
           reject()
         var stream = fs.createWriteStream(path)
-
         result.on('data', (data) => {
           stream.write(data)
         })
