@@ -30,26 +30,17 @@ router.get('/backup/download/:id', function (req, res, next) {
       message: 'invalid_token'
     })
   var path = backupManager.find(req.params.id).path
-  console.log('Reading path:' + path)
-  var stream = fs.createReadStream(path)
-
-  var interval = null
-  var readed = stream.read(process.env.STREAM_SPEED)
-  console.log(readed)
-  res.write(readed)
-
-  interval = setInterval(() => {
-    readed = stream.read(process.env.STREAM_SPEED)
-    if (readed == null) {
-      clearInterval(interval)
-      stream.close()
-      console.log('THE END')
-      res.end()
-      return
-    }
-    console.log(readed)
-    res.write(readed)
-  }, 1000)
+  var stream = fs.createReadStream(path, {highWaterMark: process.env.STREAM_SPEED})
+  stream.on('data', (data)=> {    
+    res.write(data)
+    stream.pause()
+  })
+  setInterval(()=> stream.resume() , 1000)
+  stream.on('end', () => {
+    stream.close()
+    res.end()
+    return
+  })
 })
 
 module.exports = router;
