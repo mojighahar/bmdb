@@ -26,7 +26,6 @@ class Remote {
 
         result.on('end', () => {
           var parsed = JSON.parse(rawData)
-          console.log(parsed)
           if(parsed.success) {
             resolve(parsed.updates)
           } else {
