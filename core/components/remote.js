@@ -1,8 +1,6 @@
 const http = require('http')
 const fs = require('fs')
 
-const RemoteBackup = require('./remoteBackup')
-
 class Remote {
   constructor(id, name, token, host, port = 65234) {
     this.id = id
@@ -16,7 +14,7 @@ class Remote {
     return new Promise((resolve, reject) => {
       var request = http.get(`http://${this.host}:${this.port}/backup/getUpdates?startId=${lastId}&token=${this.token}`, (result) => {
         if (result.statusCode != 200)
-          reject()
+          reject(new Error('invalid status code: ' + result.statusCode))
 
         var rawData = ''
 
@@ -29,9 +27,8 @@ class Remote {
           if(parsed.success) {
             resolve(parsed.updates)
           } else {
-            reject()
+            reject(new Error('Remote Error: ', parsed.message))
           }
-          
         })
 
         result.on('error', reject)
