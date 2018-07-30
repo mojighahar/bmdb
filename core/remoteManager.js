@@ -13,7 +13,7 @@ class RemoteManager {
     console.log('Remote Finded: ' + remote.toObject());
     
     var updates = await remote.getUpdates(this.getLastRemoteId(id))
-    console.log(update.length + ' Updates detected')
+    console.log(updates.length + ' Updates detected')
     for (var i = 0, update; update = updates[i]; i++) {
       var backup = RemoteBackup.new(
           this.getLastId(),
