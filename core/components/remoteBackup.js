@@ -1,4 +1,5 @@
 const Path = require('path')
+const fs = require('fs')
 
 class RemoteBackup {
   constructor(id, remoteId, date, path, valid = true, remote) {
@@ -27,6 +28,12 @@ class RemoteBackup {
       valid: this.valid,
       remote: this.remote
     }
+  }
+
+  destroy() {
+    try {
+      fs.unlinkSync(this.path)
+    } catch (error) {}
   }
 
   static fromObject(object) {

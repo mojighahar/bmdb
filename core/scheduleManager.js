@@ -16,7 +16,7 @@ class ScheduleManager {
     schedules.forEach(schedule => {
       if (name && schedule.name != name)
         return
-      schedule.start()
+      schedule.start(this)
     })
   }
 
@@ -24,7 +24,7 @@ class ScheduleManager {
     schedules.forEach(schedule => {
       if (name && schedule.name != name)
         return
-      schedule.run()
+      schedule.run(this)
     })
   }
 

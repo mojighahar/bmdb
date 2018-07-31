@@ -16,7 +16,7 @@ class RemoteManager {
     console.log(updates.length + ' Updates detected')
     for (var i = 0, update; update = updates[i]; i++) {
       var backup = RemoteBackup.new(
-          this.getLastId(),
+          this.getLastId() + 1,
           id,
           new LocalBackup(
             update.id,
@@ -40,7 +40,16 @@ class RemoteManager {
       if (backup.id > lastId)
         lastId = backup.id
     })
-    return lastId + 1
+    return lastId
+  }
+
+  static getFirstId() {
+    var firstId = null;
+    remoteBackups.forEach(backup => {
+      if (firstId == null || backup.id < firstId)
+        firstId = backup.id
+    })
+    return firstId
   }
 
   static getLastRemoteId(id) {
@@ -118,6 +127,18 @@ class RemoteManager {
       remoteList.push(remote.toObject(remote))
     })
     StorageManager.write('remotes', remoteList)
+  }
+
+  static remove(id) {
+    for (var i = 0, backup; backup = remoteBackups[i]; i++) {
+      if (backup.id == id) {
+        backup.destroy()
+        remoteBackups.splice(i, 1)
+        break
+      }
+    }
+    this.saveBackups()
+    console.log(id + ' Removed')
   }
 }
 

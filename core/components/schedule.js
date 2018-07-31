@@ -18,10 +18,10 @@ class Schedule {
     this.enabled = false
   }
 
-  start() {
+  start(master) {
     if(this.enabled) {
-      this.interval = setInterval(() => this.run(), this.duration)
-      this.run()
+      this.interval = setInterval(() => this.run(master), this.duration)
+      this.run(master)
     }
   }
 
@@ -30,8 +30,9 @@ class Schedule {
       clearInterval(this.interval)
   }
 
-  run() {
+  run(master) {
     this.lastRun = Date.now()
+    master.save()
     var scheduleFile = path.resolve(__dirname, '../../schedules/', this.type)
     require(scheduleFile)(this.data)
   }

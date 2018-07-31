@@ -1,4 +1,5 @@
 const Path = require('path')
+const fs = require('fs')
 
 class LocalBackup {
   constructor(id, databaseId, date, path, valid = true) {
@@ -15,6 +16,12 @@ class LocalBackup {
 
   getPath() {
     return Path.resolve(__dirname, '../../backups/local', this.id + '.back')
+  }
+
+  destroy() {
+    try {
+      fs.unlinkSync(this.path)
+    } catch (error) { }
   }
 
   toObject() {

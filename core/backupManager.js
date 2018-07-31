@@ -7,7 +7,7 @@ var localBackups = []
 
 class BackupManager {
   static async take(database) {
-    var backup = LocalBackup.new(this.getLastId(), database.id)
+    var backup = LocalBackup.new(this.getLastId() + 1, database.id)
     await database.driver.backup(backup.path)
     localBackups.push(backup)
     this.save()
@@ -50,21 +50,40 @@ class BackupManager {
   static getLastId() {
     var lastId = 0;
     localBackups.forEach(backup => {
-      if(backup.id > lastId)
+      if (backup.id > lastId)
         lastId = backup.id
     })
-    return lastId + 1
+    return lastId
+  }
+
+  static getFirstId() {
+    var firstId = null;
+    localBackups.forEach(backup => {
+      if (firstId == null || backup.id < firstId)
+        firstId = backup.id
+    })
+    return firstId
   }
 
   static getUpdates(startId = 1, length = -1) {
     var updates = []
-    for(var i = 0, backup; backup = localBackups[i]; i++) {
-      if(backup.id >= startId)
+    for (var i = 0, backup; backup = localBackups[i]; i++) {
+      if (backup.id >= startId)
         updates.push(backup.toObject())
-      if(length != -1 && updates.length >= length)
+      if (length != -1 && updates.length >= length)
         break
     }
     return updates
+  }
+
+  static remove(id) {
+    for (var i = 0, backup; backup = localBackups[i]; i++) {
+      if (backup.id == id) {
+        backup.destroy()
+        localBackups.splice(i, 1)
+      }
+    }
+    this.save()
   }
 }
 
